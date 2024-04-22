@@ -3,7 +3,7 @@
     "outDir": "./dist/",
     "noImplicitAny": true,
     "target": "es2020",
-    "module": "es2022",
+    "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": false,
     "forceConsistentCasingInFileNames": true,

@@ -1,9 +1,9 @@
-import { HardhatUserConfig } from "hardhat/config";
-import "@nomicfoundation/hardhat-toolbox";
-import "@nomicfoundation/hardhat-chai-matchers";
-import "@nomicfoundation/hardhat-ethers";
-import "@nomicfoundation/hardhat-verify";
-import fs from "fs";
+require("hardhat/config");
+require("@nomicfoundation/hardhat-toolbox");
+require("@nomicfoundation/hardhat-chai-matchers");
+require("@nomicfoundation/hardhat-ethers");
+require("@nomicfoundation/hardhat-verify");
+const fs = require("fs");
 
 
 let mnemonic = 'inspire school random normal account steel strike shove close album produce cube bounce memory before';
@@ -11,7 +11,7 @@ if (fs.existsSync(".mnemonic")) {
   mnemonic = fs.readFileSync(".mnemonic").toString().trim();
 }
 
-const config: HardhatUserConfig = {
+const config = {
   defaultNetwork: "alpha2",
   networks: {
     hardhat: {
