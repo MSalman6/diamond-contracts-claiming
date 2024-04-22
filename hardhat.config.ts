@@ -3,7 +3,7 @@ import "@nomicfoundation/hardhat-toolbox";
 import "@nomicfoundation/hardhat-chai-matchers";
 import "@nomicfoundation/hardhat-ethers";
 import "@nomicfoundation/hardhat-verify";
-import fs from "fs";
+import * as fs from "fs";
 
 
 let mnemonic = 'inspire school random normal account steel strike shove close album produce cube bounce memory before';
