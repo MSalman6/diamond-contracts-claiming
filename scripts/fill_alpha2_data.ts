@@ -7,7 +7,7 @@ import { ethers } from "hardhat";
 import "@nomiclabs/hardhat-ethers";
 
 import { ensure0x } from "../api/src/cryptoHelpers";
-import { CryptoJS } from "../api/src/cryptoJS";
+import { DMDClaimingHelpers } from "../api/src/DMDClaimingHelpers";
 
 import { ClaimContract } from "../typechain-types/ClaimContract";
 
@@ -68,7 +68,7 @@ async function main() {
     // // claimed in phase 3: 5% 
     // // never claimed:      15%
 
-    const cryptoJS = new CryptoJS();
+    const cryptoJS = new DMDClaimingHelpers();
 
     const claim1Address1 = "0x69d1521d584e4F011A3ee4F620759aDAB758333b";
     const claim1AddressOld = "dDZuUpUDjbSxyufLJS1FkWxToq9k41dcAJ";

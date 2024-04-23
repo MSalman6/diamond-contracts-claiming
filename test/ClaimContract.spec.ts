@@ -11,11 +11,11 @@ import ECPairFactory from 'ecpair';
 import * as ecc from 'tiny-secp256k1';
 
 import { ClaimContract } from "../typechain-types";
-import { CryptoJS } from "../api/src/cryptoJS";
+import { DMDClaimingHelpers } from "../api/src/DMDClaimingHelpers";
 import { ensure0x, hexToBuf, remove0x, stringToUTF8Hex, toHexString } from "../api/src/cryptoHelpers";
 import { getTestSignatures } from "./fixtures/signature";
 import { TestBalances, getTestBalances, getTestBalances_BTC, getTestBalances_DMD, getTestBalances_DMD_cli_same_address, getTestBalances_DMD_cli, getTestBalances_DMD_with_prefix } from "./fixtures/balances";
-import { CryptoSol } from "../api/src/cryptoSol";
+import { DMDClaimingAPI } from "../api/src/DMDClaimingAPI";
 
 
 const ECPair = ECPairFactory(ecc);
@@ -38,7 +38,7 @@ describe('ClaimContract', () => {
     let lateClaimBeneficorAddress: string;
     let lateClaimBeneficorDAO: string;
 
-    let cryptoJS: CryptoJS;
+    let cryptoJS: DMDClaimingHelpers;
 
     async function deployClaiming(claimBeneficorAddress: string, beneficorDAOAddress: string, prefix: string) {
         const contractFactory = await ethers.getContractFactory("ClaimContract");
@@ -107,7 +107,7 @@ describe('ClaimContract', () => {
         lateClaimBeneficorAddress = signers[0].address;
         lateClaimBeneficorDAO = signers[1].address;
 
-        cryptoJS = new CryptoJS();
+        cryptoJS = new DMDClaimingHelpers();
     });
 
     describe("deployment", () => {
@@ -378,7 +378,7 @@ describe('ClaimContract', () => {
             const caller = signers[0];
             const balances = testSet;
 
-            let cryptoSol = new CryptoSol(claimContract);
+            let cryptoSol = new DMDClaimingAPI(claimContract);
 
             for (const balance of balances.balances) {
                 const ripeAddress = ensure0x(cryptoJS.dmdAddressToRipeResult(balance.dmdv3Address));
@@ -390,7 +390,7 @@ describe('ClaimContract', () => {
 
             for (const balance of balances.balances) {
                 let balanceBeforeClaim = await ethers.provider.getBalance(balance.dmdv4Address);
-                await cryptoSol.claim(balance.dmdv3Address, balance.dmdv4Address, balance.signature, "", balances.isDMDSigned);
+                await cryptoSol.claim(balance.dmdv4Address, balance.signature, "", balances.isDMDSigned);
                 let balanceAfterClaim = await ethers.provider.getBalance(balance.dmdv4Address);
 
                 let expectedBalance = ethers.toBigInt(balance.value) + balanceBeforeClaim;

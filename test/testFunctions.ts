@@ -1,9 +1,9 @@
 import sha256 from 'js-sha256'
 import { expect, assert } from 'chai';
 import varuint from 'varuint-bitcoin';
-import { CryptoJS } from '../api/src/cryptoJS';
+import { DMDClaimingHelpers } from '../api/src/DMDClaimingHelpers';
 import EC from 'elliptic';
-import { CryptoSol } from '../api/src/cryptoSol';
+import { DMDClaimingAPI } from '../api/src/DMDClaimingAPI';
 import BN = require('bn.js');
 import { remove0x } from '../api/src/cryptoHelpers';
 import ECPairFactory from 'ecpair';
@@ -17,8 +17,8 @@ const bitcoinMessage = require('bitcoinjs-message');
 
 export class TestFunctions {
 
-  public cryptoJS = new CryptoJS();
-  public cryptoSol: CryptoSol;
+  public cryptoJS = new DMDClaimingHelpers();
+  public cryptoSol: DMDClaimingAPI;
 
   private logDebug: boolean = false;
 
@@ -27,7 +27,7 @@ export class TestFunctions {
       throw Error("Claim contract must be defined!!");
     }
 
-    this.cryptoSol = new CryptoSol(instance);
+    this.cryptoSol = new DMDClaimingAPI(instance);
   }
 
   public setLogDebug(value: boolean) {
@@ -73,7 +73,7 @@ export class TestFunctions {
     //claimContract.contract.functions
 
     //function calculateAddressString(address addr, bool includeAddrChecksum)
-    const calcAddressResult = await this.cryptoSol.instance.calculateAddressString(address, true);
+    const calcAddressResult = await this.cryptoSol.contract.calculateAddressString(address, true);
 
     //0x66456337423030444330313932333139446441306337373741394630344534374463343962443138
     //this.log('calcAddressResult' + calcAddressResult);
@@ -135,38 +135,12 @@ export class TestFunctions {
     }
   }
 
-  // public xyFromRS(buf: Buffer) : {x: string ,y: string} {
-  //   //var EC = require('elliptic').ec;
-
-  //   // Create and initialize EC context
-  //   // (better do it once and reuse it)
-  //   var ec = new EC.ec('secp256k1');
-
-  //   const recoverResult = ec.recoverPubKey(msg, signature, 27);
-  //   const key = ec.keyFromPublic(buf);
-
-  //   const publicKey = key.getPublic();
-
-  //   return {
-  //     x: publicKey.getX().toString(),
-  //     y: publicKey.getX().toString()
-  //   }
-  // }
-
-
   private ellipticHexStringToWeb3HexString(strangeType: any): string {
 
     let ellipticHexString = JSON.stringify(strangeType);
     ellipticHexString = ellipticHexString.replace('"', '').replace('"', '');
     return '0x' + ellipticHexString;
   }
-
-  // public async messageToHashInContract(value: string) : Buffer {
-  //   const result27 = await this.instance.methods.claimMessageCreate(message, true, hashHex, xy27.x, xy27.y, 27, rHex, sHex).call();
-  // }
-
-
-
 
   public async testAddressRecovery() {
 
@@ -498,7 +472,7 @@ export class TestFunctions {
       //calculate the significant bytes of the DMDv3 address.
     }
 
-    this.log('address:', this.cryptoSol.instance.address);
+    this.log('address:', this.cryptoSol.contract.address);
     const balance = await this.cryptoSol.getContractBalance();
     this.log('balance:', balance);
     this.log('expectedTotalBalance:', expectedTotalBalance.toString());

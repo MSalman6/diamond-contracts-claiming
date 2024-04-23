@@ -8,8 +8,6 @@ import * as bitcoin from 'bitcoinjs-lib';
 import * as secp256k1 from "secp256k1";
 import { ethers } from 'hardhat';
 
-let base58check = require('base58check'); 
-
 const SEGWIT_TYPES = {
   P2WPKH: 'p2wpkh',
   P2SH_P2WPKH: 'p2sh(p2wpkh)'
@@ -44,10 +42,7 @@ const SEGWIT_TYPES = {
 /**
  * Crypto functions used in this project implemented in JS.
  */
-export class CryptoJS {
-
-
-  
+export class DMDClaimingHelpers {
 
   private logDebug: boolean = false;
 
@@ -183,7 +178,7 @@ export class CryptoJS {
     //this.log('parsed Signature:', parsed);
 
     // todo: add support for DMD specific signing prefix
-    const hash = bitcoinMessage.magicHash(messageContent, CryptoJS.getSignaturePrefix(isDMDSigned));
+    const hash = bitcoinMessage.magicHash(messageContent, DMDClaimingHelpers.getSignaturePrefix(isDMDSigned));
 
     
     const publicKey = secp256k1.ecdsaRecover(
@@ -274,12 +269,12 @@ export class CryptoJS {
   }
   
   public getDMDSignedMessage(message: string): Buffer  {
-    return this.getSignedMessage(CryptoJS.getSignaturePrefix(true), message);
+    return this.getSignedMessage(DMDClaimingHelpers.getSignaturePrefix(true), message);
   }
 
 
   public getBitcoinSignedMessage(message: string): Buffer  {
-    return this.getSignedMessage(CryptoJS.getSignaturePrefix(false), message);
+    return this.getSignedMessage(DMDClaimingHelpers.getSignaturePrefix(false), message);
   }
 
 }

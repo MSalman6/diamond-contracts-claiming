@@ -1,5 +1,5 @@
 import hre from "hardhat";
-import { CryptoSol } from "../api/src/cryptoSol";
+import { DMDClaimingAPI } from "../api/src/DMDClaimingAPI";
 import { ClaimContract, ClaimContract__factory } from "../typechain-types";
 import { stringToUTF8Hex } from "../api/src/cryptoHelpers";
 
@@ -39,7 +39,7 @@ async function main() {
     console.log(`npx hardhat verify --network alpha2 ${claimContractAddress} ${claimBeneficorAddress} ${beneficorDAOAddress} ${prefixHex} ${dillute1} ${dillute2} ${dillute3}` );
 
 
-    let cryptoSol = new CryptoSol(claimContract);
+    let cryptoSol = new DMDClaimingAPI(claimContract);
 
     let balanceRow = { dmdv3Address: 'dKnjYUHFJPunnpA5vw1U8rd7WrLgh9wcdY', dmdv4Address: '0xEb44B81852A2705701A59D454d1a33DA7a71E169', value: "1000000000000000000", signature: 'IAAbfHCOsm8WB+ARRAvNuaIdTKIOa029UpdZKhaH/fmyd8dhBe2uOOaANWSVhiQ9MwhonPqp30U5WzXcXkfZJlk=' };
 

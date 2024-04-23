@@ -2,7 +2,7 @@
   "name": "diamond-contracts-claiming",
   "version": "0.9.0",
   "description": "claiming contracts",
-  "main": "index.js",
+  "main": "api/src/index.ts",
   "coverage": "export SOLIDITY_COVERAGE=true && npx hardhat coverage",
   "scripts": {
     "compile": "npx hardhat compile",
@@ -40,23 +40,6 @@
     "tiny-secp256k1": "^2.2.3",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.3",
-    "webpack": "^5.91.0",
-    "webpack-cli": "^5.1.4"
-  },
-  "dependencies": {
-    "@nomicfoundation/hardhat-ethers": "^3.0.0",
-    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-    "@typechain/ethers-v6": "^0.5.1",
-    "@types/elliptic": "^6.4.18",
-    "base58check": "^2.0.0",
-    "bitcoinjs-lib": "^6.1.5",
-    "bitcoinjs-message": "^2.2.0",
-    "bs58check": "^3.0.1",
-    "ecpair": "^2.1.0",
-    "elliptic": "^6.5.5",
-    "js-sha256": "^0.11.0",
-    "secp256k1": "^5.0.0",
-    "tiny-secp256k1": "^2.2.3"
+    "typescript": "^5.4.3"
   }
 }
