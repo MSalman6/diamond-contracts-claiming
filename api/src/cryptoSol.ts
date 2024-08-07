@@ -114,14 +114,14 @@ export class CryptoSol {
     return new TextDecoder("utf-8").decode(buffer);
   }
 
-  public async addBalance(dmdV3Address: string, value: string) {
+  // public async addBalance(dmdV3Address: string, value: string) {
 
-    const signers = await ethers.getSigners();
-    const fromAccount = signers[0];
-    const ripe = this.cryptoJS.dmdAddressToRipeResult(dmdV3Address);
+  //   const signers = await ethers.getSigners();
+  //   const fromAccount = signers[0];
+  //   const ripe = this.cryptoJS.dmdAddressToRipeResult(dmdV3Address);
 
-    return (await this.instance.connect(fromAccount).addBalance(ensure0x(ripe), { value: value })).wait();
-  }
+  //   return (await this.instance.connect(fromAccount).addBalance(ensure0x(ripe), { value: value })).wait();
+  // }
 
   // public async claim(dmdv3Address: string, payoutAddress: string, signature: string ) {
   //   ensurePrefixCache()
