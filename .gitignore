@@ -7,7 +7,6 @@ artifacts/
 logs/
 *.log
 
-typechain-types/
 api/contracts/
 
 build/
