@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CryptoSol = void 0;
-const hardhat_1 = require("hardhat");
+const ethers_1 = require("ethers");
 const cryptoHelpers_1 = require("./cryptoHelpers");
 const cryptoJS_1 = require("./cryptoJS");
 const cryptoHelpers_2 = require("./cryptoHelpers");
@@ -10,10 +10,10 @@ let base58check = require('base58check');
  * Crypto functions used in this project implemented in Soldity.
  */
 class CryptoSol {
-    static async fromContractAddress(contractAddress) {
-        const contract = await hardhat_1.ethers.getContractAt("ClaimContract", contractAddress);
-        return new CryptoSol(contract);
-    }
+    // public static async fromContractAddress(contractAddress: string): Promise<CryptoSol> {
+    //   const contract: any = await ethers.getContractAt("ClaimContract", contractAddress);
+    //   return new CryptoSol(contract);
+    // }
     /// Creates an instance if you already have a ClaimContract instance.
     /// use static method fromContractAddress() for creating an instance from a contract address.
     constructor(instance) {
@@ -96,19 +96,19 @@ class CryptoSol {
         const ripe = this.cryptoJS.dmdAddressToRipeResult(dmdV3Address);
         return await this.instance.balances((0, cryptoHelpers_1.ensure0x)(ripe));
     }
-    async getContractBalance() {
-        const address = await this.instance.getAddress();
-        // get the balance of ths address.
-        return await hardhat_1.ethers.provider.getBalance(address);
-    }
+    // public async getContractBalance() {
+    //   const address = await this.instance.getAddress();
+    //   // get the balance of ths address.
+    //   return await ethers.provider.getBalance(address);
+    // }
     async fillBalances(claimContract, sponsor, balances) {
-        let totalBalance = hardhat_1.ethers.toBigInt('0');
+        let totalBalance = ethers_1.ethers.toBigInt('0');
         let accounts = [];
         let balancesForContract = [];
         for (const balance of balances) {
             accounts.push((0, cryptoHelpers_1.ensure0x)(this.cryptoJS.dmdAddressToRipeResult(balance.dmdv3Address)));
             balancesForContract.push(balance.value);
-            totalBalance = totalBalance + hardhat_1.ethers.toBigInt(balance.value);
+            totalBalance = totalBalance + ethers_1.ethers.toBigInt(balance.value);
         }
         // console.log(accounts);
         // console.log(balancesForContract);

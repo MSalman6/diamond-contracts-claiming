@@ -1,4 +1,4 @@
-import { ethers } from "hardhat";
+import { ethers } from "ethers";
 import { ClaimContract } from '../../typechain-types/index';
 import { ensure0x, ensure0xb32, remove0x, stringToUTF8Hex, toHexString } from './cryptoHelpers';
 import { CryptoJS } from './cryptoJS';
@@ -17,11 +17,11 @@ export class CryptoSol {
 
   private logDebug: boolean = false;
 
-  public static async fromContractAddress(contractAddress: string): Promise<CryptoSol> {
+  // public static async fromContractAddress(contractAddress: string): Promise<CryptoSol> {
 
-    const contract: any = await ethers.getContractAt("ClaimContract", contractAddress);
-    return new CryptoSol(contract);
-  }
+  //   const contract: any = await ethers.getContractAt("ClaimContract", contractAddress);
+  //   return new CryptoSol(contract);
+  // }
 
   /// Creates an instance if you already have a ClaimContract instance.
   /// use static method fromContractAddress() for creating an instance from a contract address.
@@ -133,12 +133,12 @@ export class CryptoSol {
     return await this.instance.balances(ensure0x(ripe));
   }
 
-  public async getContractBalance() {
-    const address = await this.instance.getAddress();
-    // get the balance of ths address.
+  // public async getContractBalance() {
+  //   const address = await this.instance.getAddress();
+  //   // get the balance of ths address.
 
-    return await ethers.provider.getBalance(address);
-  }
+  //   return await ethers.provider.getBalance(address);
+  // }
 
 
   public async fillBalances(claimContract: ClaimContract, sponsor: SignerWithAddress, balances: BalanceV3[]) {

@@ -34,7 +34,7 @@ const varuint_bitcoin_1 = __importDefault(require("varuint-bitcoin"));
 const bitcoinjs_message_1 = __importDefault(require("bitcoinjs-message"));
 const bitcoin = __importStar(require("bitcoinjs-lib"));
 const secp256k1 = __importStar(require("secp256k1"));
-const hardhat_1 = require("hardhat");
+const ethers_1 = require("ethers");
 let base58check = require('base58check');
 const SEGWIT_TYPES = {
     P2WPKH: 'p2wpkh',
@@ -166,7 +166,7 @@ class CryptoJS {
         //we now have the public key
         //public key is the X Value with a prefix.
         //it's 02 or 03 prefix, depending if y is ODD or not.
-        this.log("publicKey: ", hardhat_1.ethers.hexlify(publicKey));
+        this.log("publicKey: ", ethers_1.ethers.hexlify(publicKey));
         var ec = new elliptic_1.default.ec('secp256k1');
         const key = ec.keyFromPublic(publicKey);
         //const x = ethers.hexlify(publicKey.slice(1));
@@ -174,7 +174,7 @@ class CryptoJS {
         const x = (0, cryptoHelpers_1.ensure0x)(key.getPublic().getX().toString('hex'));
         const y = (0, cryptoHelpers_1.ensure0x)(key.getPublic().getY().toString('hex'));
         this.log("y: " + y);
-        return { publicKey: hardhat_1.ethers.hexlify(publicKey), x, y };
+        return { publicKey: ethers_1.ethers.hexlify(publicKey), x, y };
     }
     getXYfromPublicKeyHex(publicKeyHex) {
         var ec = new elliptic_1.default.ec('secp256k1');
