@@ -42,6 +42,6 @@
     "typescript": "^5.4.3"
   },
   "files": [
-    "dist/**/*"
+    "dist/**/*", "artifacts/**/*"
   ]
 }
