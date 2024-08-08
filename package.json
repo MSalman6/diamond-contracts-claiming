@@ -3,6 +3,7 @@
   "version": "0.9.0",
   "description": "claiming contracts",
   "main": "index.js",
+  "types": "dist/types",
   "coverage": "export SOLIDITY_COVERAGE=true && npx hardhat coverage",
   "scripts": {
     "compile": "npx hardhat compile",
