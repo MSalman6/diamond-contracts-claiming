@@ -1,4 +1,4 @@
-import { BalanceV3 } from "./interfaces.ts"
+import { BalanceV3 } from "./interfaces";
 
 function getAlpha3Values() : BalanceV3[] {
      

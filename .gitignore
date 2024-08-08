@@ -10,7 +10,6 @@ logs/
 api/contracts/
 
 build/
-dist/
 
 # Coverage
 coverage/
@@ -20,3 +19,5 @@ coverage.json
 .vscode/
 
 .env
+
+typechain-types/
