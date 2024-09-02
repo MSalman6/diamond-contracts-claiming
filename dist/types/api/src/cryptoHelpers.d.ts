@@ -1,4 +1,3 @@
-/// <reference types="node" />
 export declare function remove0x(input: string): string;
 export declare function ensure0xb32(input: string): string;
 export declare function ensure0x(input: string | Buffer): string;

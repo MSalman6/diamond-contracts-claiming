@@ -83,7 +83,7 @@ class CryptoJS {
      * @param x x coordinate of the public key, with prefix 0x
      * @param y y coordinate of the public key, with prefix 0x
      */
-    publicKeyToBitcoinAddress(publicKey) {
+    publicKeyToDMDAddress(publicKey) {
         // const hash = bitcoinMessage.magicHash(publicKeyBuffer, CryptoJS.getSignaturePrefix(false));
         // const publicKey = secp256k1.publicKeyConvert(publicKeyBuffer, true);
         //const address = bitcoinMessage.pubKeyToAddress(publicKey, true);
@@ -171,9 +171,11 @@ class CryptoJS {
         const key = ec.keyFromPublic(publicKey);
         //const x = ethers.hexlify(publicKey.slice(1));
         //this.log("x: " + x);
+        // this.log("key:", key);
         const x = (0, cryptoHelpers_1.ensure0x)(key.getPublic().getX().toString('hex'));
         const y = (0, cryptoHelpers_1.ensure0x)(key.getPublic().getY().toString('hex'));
-        this.log("y: " + y);
+        this.log("x:", x);
+        this.log("y:", y);
         return { publicKey: ethers_1.ethers.hexlify(publicKey), x, y };
     }
     getXYfromPublicKeyHex(publicKeyHex) {
@@ -187,7 +189,7 @@ class CryptoJS {
         return { x, y };
     }
     bitcoinAddressEssentialToFullQualifiedAddress(essentialPart, addressPrefix = '00') {
-        // this.log('PublicKeyToBitcoinAddress:', essentialPart);
+        // this.log('publicKeyToDMDAddress:', essentialPart);
         let result = (0, cryptoHelpers_1.hexToBuf)(essentialPart);
         result = (0, cryptoHelpers_1.prefixBuf)(result, addressPrefix);
         //this.log('with prefix: ' + result.toString('hex'));

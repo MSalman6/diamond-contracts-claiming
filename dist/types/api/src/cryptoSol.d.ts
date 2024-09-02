@@ -1,5 +1,3 @@
-/// <reference types="node" />
-import { ethers } from "ethers";
 import { ClaimContract } from '../../typechain-types/index';
 import { CryptoJS } from './cryptoJS';
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
@@ -11,8 +9,9 @@ export declare class CryptoSol {
     instance: ClaimContract;
     cryptoJS: CryptoJS;
     private logDebug;
+    static fromContractAddress(contractAddress: string): Promise<CryptoSol>;
     constructor(instance: ClaimContract);
-    claim(dmdV3Address: string, dmdV4Address: string, signature: string, postfix: string): Promise<ethers.ContractTransactionReceipt | null>;
+    claim(dmdV3Address: string, dmdV4Address: string, signature: string, postfix: string): Promise<import("ethers").ContractTransactionReceipt | null>;
     recoverV(dmdV4Address: string, postfixHex: string, pubKeyX: string, pubKeyY: string, r: Buffer, s: Buffer): Promise<string>;
     setLogDebug(value: boolean): void;
     private log;
@@ -20,5 +19,6 @@ export declare class CryptoSol {
     pubKeyToEthAddress(x: string, y: string): Promise<string>;
     prefixString(): Promise<string>;
     getBalance(dmdV3Address: string): Promise<bigint>;
-    fillBalances(claimContract: ClaimContract, sponsor: SignerWithAddress, balances: BalanceV3[]): Promise<bigint>;
+    getContractBalance(): Promise<bigint>;
+    fillBalances(sponsor: SignerWithAddress, balances: BalanceV3[]): Promise<bigint>;
 }

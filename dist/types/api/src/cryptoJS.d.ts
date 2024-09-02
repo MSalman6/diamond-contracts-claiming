@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import BN from 'bn.js';
 /**
  * Crypto functions used in this project implemented in JS.
@@ -13,7 +12,7 @@ export declare class CryptoJS {
      * @param x x coordinate of the public key, with prefix 0x
      * @param y y coordinate of the public key, with prefix 0x
      */
-    publicKeyToBitcoinAddress(publicKey: string): string;
+    publicKeyToDMDAddress(publicKey: string): string;
     /**
      *
      * @param address dmd or bitcoin style address.
