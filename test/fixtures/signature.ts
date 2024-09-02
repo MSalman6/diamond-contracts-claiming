@@ -2,7 +2,6 @@ export function getTestSignatures() {
     // returns a bunch of test signatures used in various tests.
     // those are created with  https://reinproject.org/bitcoin-signature-tool/#sign
     // the signed message is: "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
-    // the private key is:
     return [
         "IA7ZY6Vi52XpL6BKiq74jeP7phdBJO5JqgsEUsmUDZZFNWnsC6X3kknADhJdXCTLcjAUI1bwn1IAVprv/krj7tQ=",
         "IJ42x26AH10GPhfnXdHMzj5KAmjekeaS4sA6uo2unlW+GLJqSSrVW03sYFIouW/oOE6v/uCl5z0jgmbLmOngSXI=",

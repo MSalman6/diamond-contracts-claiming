@@ -70,7 +70,7 @@ export class CryptoJS {
    * @param x x coordinate of the public key, with prefix 0x
    * @param y y coordinate of the public key, with prefix 0x
    */
-  public publicKeyToBitcoinAddress(publicKey: string): string {
+  public publicKeyToDMDAddress(publicKey: string): string {
     
     // const hash = bitcoinMessage.magicHash(publicKeyBuffer, CryptoJS.getSignaturePrefix(false));
     // const publicKey = secp256k1.publicKeyConvert(publicKeyBuffer, true);
@@ -193,6 +193,7 @@ export class CryptoJS {
       parsed.compressed
     );
 
+    
     //we now have the public key
     //public key is the X Value with a prefix.
     //it's 02 or 03 prefix, depending if y is ODD or not.
@@ -205,11 +206,13 @@ export class CryptoJS {
     const key = ec.keyFromPublic(publicKey);
     //const x = ethers.hexlify(publicKey.slice(1));
     //this.log("x: " + x);
+    // this.log("key:", key);
+
     const x = ensure0x(key.getPublic().getX().toString('hex'));
     const y = ensure0x(key.getPublic().getY().toString('hex'));
 
-    
-    this.log("y: " + y);
+    this.log("x:", x)
+    this.log("y:", y);
 
     return { publicKey: ethers.hexlify(publicKey), x, y };
   }
@@ -229,7 +232,7 @@ export class CryptoJS {
 
   public bitcoinAddressEssentialToFullQualifiedAddress(essentialPart: string, addressPrefix = '00') {
 
-    // this.log('PublicKeyToBitcoinAddress:', essentialPart);
+    // this.log('publicKeyToDMDAddress:', essentialPart);
     let result = hexToBuf(essentialPart);
     result = prefixBuf(result, addressPrefix);
     //this.log('with prefix: ' + result.toString('hex'));

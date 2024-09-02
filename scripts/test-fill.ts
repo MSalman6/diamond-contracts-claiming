@@ -16,7 +16,7 @@ async function main() {
     let beneficorDAOAddress = "0xDA0da0da0Da0Da0Da0DA00DA0da0da0DA0DA0dA0";
 
     //let dillute1 =
-    let now = (Date.now() / 1000).toFixed(0);
+    let now = Math.round(Date.now() / 1000);
 
     const month = 60 * 60 * 24 * 31;
     const dillute1 = now + 3 * month;

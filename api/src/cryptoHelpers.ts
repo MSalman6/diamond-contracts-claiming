@@ -1,17 +1,21 @@
 export function remove0x(input: string) {
   if (input.startsWith('0x')) {
-    return input.substring(2);
+    input = input.substring(2);
   }
+
+  // console.log("remove0x input:", input);
+  // we prepent a 0 if the string is missing a hex digit.
+  if (input.length % 2 != 0) { 
+    // console.log("prepending 0 to hex string:", input);
+    return '0' + input;
+  }
+
   return input;
 }
 
 export function ensure0xb32(input: string) : string {
 
   let buf = hexToBuf(input);
-
-  if (buf.length == 32) {
-    return input;
-  }
 
   //let buf = new Buffer() 
   //while (buf.length < 32) {
@@ -23,6 +27,9 @@ export function ensure0xb32(input: string) : string {
 
   let prefix = Buffer.alloc(32 - buf.length, 0);
   let resultBuf = Buffer.concat([prefix, buf]);
+
+  //console.log("resultBuf:", resultBuf.toString('hex'));
+  //console.log("result:", ensure0x(resultBuf));
   return ensure0x(resultBuf);
 }
 

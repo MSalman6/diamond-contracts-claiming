@@ -1,0 +1,23 @@
+{
+    "messagePrefix": "claim to: ",
+    "balances": [
+    {
+        "dmdv3Address": "dFvdFaQGcopjATyn7HahzPGjnjyXSst49c",
+        "dmdv4Address": "0xbb753f1126c2463Ac29e175B180dAE7F7f627fA4",
+        "value": "10000",
+        "signature": "IKC2DJSEwiEoOI9QHLilpeFVL1CqZEXa83AkdoQUbskTZwQlrlI+LGdhvNu2nfimV94bAUptkgbvfBoimuG2Rno="
+    },
+    {
+        "dmdv3Address": "dWmJtd2YRt2FmFeSFpmnx1PGuqKwnDq5wz",
+        "dmdv4Address": "0xbb753f1126c2463Ac29e175B180dAE7F7f627fA4",
+        "value": "10000",
+        "signature": "INqnShuWu9fQu0N9LzcbNsfa/6i6FvL1LfFW53axWea1cV0t+EmlzJvDWoCBcmrJsKGIyI5F49zfXOcqM7z6iUY="
+    },
+    {
+        "dmdv3Address": "dNaPHHYUCYFhafn5sMKh2R9aXjGzi6C5Vs",
+        "dmdv4Address": "0xbb753f1126c2463Ac29e175B180dAE7F7f627fA4",
+        "value": "10000",
+        "signature": "IG/aMHHC9jplxJuXfB28AangvbCw2MYvPWhdcKwwBQLuLy3zuG15nKzCcz5AjmzRzAXFIHfHbXRHBQvKSgRicK0="
+    }
+    ]
+}

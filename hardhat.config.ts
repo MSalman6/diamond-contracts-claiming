@@ -9,10 +9,11 @@ import fs from "fs";
 let mnemonic = 'inspire school random normal account steel strike shove close album produce cube bounce memory before';
 if (fs.existsSync(".mnemonic")) {
   mnemonic = fs.readFileSync(".mnemonic").toString().trim();
+  console.log("did read mnemonic from FS");
 }
 
 const config: HardhatUserConfig = {
-  defaultNetwork: "alpha2",
+  defaultNetwork: "local",
   networks: {
     hardhat: {
       accounts: {
@@ -25,8 +26,8 @@ const config: HardhatUserConfig = {
       minGasPrice: 0,
       blockGasLimit: 1199511627775
     },
-    alpha2: {
-      url: "https://rpc.uniq.diamonds",
+    local: {
+      url: "http://127.0.0.1:8540",
       accounts: {
         count: 100,
         mnemonic
@@ -35,9 +36,21 @@ const config: HardhatUserConfig = {
       hardfork: "istanbul",
       minGasPrice: 1000000000
     },
+    alpha3: {
+      url: "https://alpha3.uniq.domains/rpc",
+      accounts: {
+        count: 10,
+        path: "m/44'/60'/0'/0",
+        mnemonic
+      },
+
+      allowUnlimitedContractSize: true,
+      hardfork: "istanbul",
+      minGasPrice: 1000000000
+    },
   },
   solidity: {
-    version: "0.8.20",
+    version: "0.8.26",
     settings: {
       optimizer: {
         enabled: true,
@@ -63,21 +76,25 @@ const config: HardhatUserConfig = {
     customChains: [
         {
             network: "local",
-            chainId: 777012,
+            chainId: 777000,
             urls: {
                 apiURL: "http://127.0.0.1:4000/api",
                 browserURL: "http://127.0.0.1:4000",
             },
         },
         {
-            network: "alpha2",
-            chainId: 777012,
+            network: "alpha3",
+            chainId: 777017,
             urls: {
-                apiURL: "https://explorer.uniq.diamonds/api",
-                browserURL: "http://explorer.uniq.diamonds",
+                apiURL: "http://62.171.133.46:4000/api",
+                browserURL: "http://62.171.133.46:4000",
             },
         },
     ],
+},
+mocha: {
+
+  timeout: 60000,
 },
 };
 

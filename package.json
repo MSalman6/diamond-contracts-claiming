@@ -8,10 +8,13 @@
   "scripts": {
     "compile": "npx hardhat compile",
     "test": "npx hardhat test --network hardhat",
+    "test-large": "export CLAIMING_TEST_RUN_LARGE=1 && npx hardhat test --network hardhat",
     "coverage": "export SOLIDITY_COVERAGE=true && npx hardhat coverage",
     "test-deploy": "ts-node scripts/deploy-raw.ts",
     "test-deploy-and-fill": "ts-node scripts/test-fill.ts",
-    "test-claim": "ts-node scripts/test-claim.ts"
+    "test-claim": "ts-node scripts/test-claim.ts",
+    "fill-alpha3": "ts-node scripts/fill-alpha3.ts",
+    "solhint": "solhint 'contracts/**/*.sol'"
   },
   "repository": {
     "type": "git",
@@ -37,6 +40,7 @@
     "elliptic": "^6.5.5",
     "js-sha256": "^0.11.0",
     "secp256k1": "^5.0.0",
+    "solhint": "^5.0.3",
     "tiny-secp256k1": "^2.2.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.3"

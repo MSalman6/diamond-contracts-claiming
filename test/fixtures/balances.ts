@@ -125,6 +125,11 @@ export function getTestBalances_DMD_with_prefix(): ClaimingDataSet {
 }
 
 
+let dmd = (num: string) => {
+    return ethers.formatUnits(ethers.parseEther(num),"wei");
+}
+
+
 /// This testset holds 4 accounts,
 /// each account represents a group if claims
 /// 1. claims with first timeslot
@@ -133,9 +138,6 @@ export function getTestBalances_DMD_with_prefix(): ClaimingDataSet {
 /// 4. never claims at all, but funds get distributed 
 export function getTestBalances_dillution(): ClaimingDataSet {
     
-    let dmd = (num: string) => {
-        return ethers.formatUnits(ethers.parseEther(num),"wei");
-    }
 
         
     // we work with a set of estimated balances her, and rounded it so it works as integer.
@@ -156,4 +158,22 @@ export function getTestBalances_dillution(): ClaimingDataSet {
         messagePrefix: "claim for dillution unit test to: ",
         balances: balances
     }
+}
+
+
+// this set has been shown as problematic with the UI: https://github.com/DMDcoin/diamond-dapp-claiming/issues/3
+export function getTestBalancesAlpha3(): ClaimingDataSet {
+
+    // we work with a set of estimated balances her, and rounded it so it works as integer.
+    let balances = [
+        { dmdv3Address: 'dYUyrALxXrzpwyE41cntKHgPS4BYSB3rQX', dmdv4Address: '0xFD6b310413e0C0E0E4736b793C592EA81F9e0246', value: dmd('565775'), signature: 'IJbyejx42+I6mh7KyWyZU3/s8HcJsoDDYojkiJPM2M55KatS5uutu7VqU74wkE9GJudXDuCrOY8lmjZTsnz14fY=' },  
+    ];
+
+    return {
+        isDMDSigned: true,
+        seedphrase: undefined, // we do not have a seedphrase for this test.
+        messagePrefix: "claim alpha3 to: ",
+        balances: balances
+    }
+
 }

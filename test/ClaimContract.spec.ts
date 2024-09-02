@@ -10,10 +10,22 @@ import { ClaimContract } from "../typechain-types";
 import { CryptoJS } from "../api/src/cryptoJS";
 import { ensure0x, hexToBuf, remove0x, stringToUTF8Hex } from "../api/src/cryptoHelpers";
 import { getTestSignatures } from "./fixtures/signature";
-import { getTestBalances, getTestBalances_DMD_cli_same_address, getTestBalances_DMD_cli, getTestBalances_DMD_with_prefix, getTestBalances_dillution } from "./fixtures/balances";
+import { getTestBalances, getTestBalances_DMD_cli_same_address, getTestBalances_DMD_cli, getTestBalances_DMD_with_prefix, getTestBalances_dillution, getTestBalancesAlpha3 } from "./fixtures/balances";
 import { CryptoSol } from "../api/src/cryptoSol";
 import { BalanceV3, ClaimingBalance, ClaimingDataSet } from "../api/data/interfaces";
+import { getTestBalancesFromTestdata } from "./fixtures/testdata";
 
+
+console.log("Large tests are disabled as default since a lot of CI Pipelines do not allow long running tests.");
+console.log("Specify ENV variable as CLAIMING_TEST_RUN_LARGE=1 to enable large tests.");
+
+let runLargeTests = false;
+
+if (process.env.CLAIMING_TEST_RUN_LARGE) {
+    if (process.env.CLAIMING_TEST_RUN_LARGE == "1" || process.env.CLAIMING_TEST_RUN_LARGE === "true") {
+        runLargeTests = true;
+    }
+}
 
 function getDilluteTimestamps(): { dillute1: number, dillute2: number, dillute3: number } {
     let now = Math.floor(Date.now() / 1000);
@@ -25,6 +37,7 @@ function getDilluteTimestamps(): { dillute1: number, dillute2: number, dillute3:
 }
 
 describe('ClaimContract', () => {
+
     let signers: SignerWithAddress[];
 
     let lateClaimBeneficorAddress: string;
@@ -52,42 +65,6 @@ describe('ClaimContract', () => {
 
         let claimContract = await deployClaiming(lateClaimBeneficorAddress, lateClaimBeneficorDAO, prefixHex);
         return { claimContract };
-    }
-
-    async function verifySignature(claimContract: ClaimContract, claimToAddress: string, signatureBase64: string, postfix: string = '') {
-
-
-        const prefixBytes = await claimContract.prefixStr();
-        const prefixBuffer = hexToBuf(prefixBytes);
-
-        const prefixString = new TextDecoder("utf-8").decode(prefixBuffer);
-
-        const key = cryptoJS.getPublicKeyFromSignature(signatureBase64, prefixString + claimToAddress + postfix, true);
-        const rs = cryptoJS.signatureBase64ToRSV(signatureBase64);
-
-        const txResult1 =
-            await claimContract.claimMessageMatchesSignature(
-                claimToAddress,
-                stringToUTF8Hex(postfix),
-                ensure0x(key.x),
-                ensure0x(key.y),
-                ensure0x('0x1b'),
-                ensure0x(rs.r.toString('hex')),
-                ensure0x(rs.s.toString('hex'))
-            );
-
-        const txResult2 =
-            await claimContract.claimMessageMatchesSignature(
-                claimToAddress,
-                stringToUTF8Hex(postfix),
-                ensure0x(key.x),
-                ensure0x(key.y),
-                ensure0x('0x1c'),
-                ensure0x(rs.r.toString('hex')),
-                ensure0x(rs.s.toString('hex'))
-            );
-
-        expect(txResult1 || txResult2).to.be.equal(true, "Claim message did not match the signature");
     }
 
     before(async () => {
@@ -276,7 +253,7 @@ describe('ClaimContract', () => {
 
 
 
-            const essentialPart = await claimContract.publicKeyToBitcoinAddress(
+            const essentialPart = await claimContract.publicKeyToDMDAddress(
                 ensure0x(x.toString('hex')),
                 ensure0x(y.toString('hex'))
             );
@@ -291,7 +268,7 @@ describe('ClaimContract', () => {
             console.log();
             // we are also cross checking the result with the result from the cryptoJS library,
             // (that uses bitcoin payments internaly to verify)
-            const addressFromCryptJS = cryptoJS.publicKeyToBitcoinAddress(publicKeyHex);
+            const addressFromCryptJS = cryptoJS.publicKeyToDMDAddress(publicKeyHex);
             expect(bs58Result).to.equal(addressFromCryptJS);
         });
 
@@ -309,7 +286,7 @@ describe('ClaimContract', () => {
         });
 
         it('JS: should recover public key from signatures, test signatures set.', async () => {
-            // Same test as previous
+            // larger test
             // But with multi signatures of the same key.
             // in order to cover different signatures variations,
             // like short S and short R
@@ -332,7 +309,7 @@ describe('ClaimContract', () => {
             }
         });
 
-        async function runAddAndClaimTests(testSet: ClaimingDataSet) {
+        async function runAddAndClaimTests(testSet: ClaimingDataSet, debug = false) {
 
             let deployFixtureSpecified = () => {
                 return deployFixture(testSet.messagePrefix);
@@ -344,7 +321,11 @@ describe('ClaimContract', () => {
 
             let cryptoSol = new CryptoSol(claimContract);
 
-            await cryptoSol.fillBalances(claimContract, caller, balances.balances);
+            if (debug) {
+                cryptoSol.setLogDebug(true);
+            }
+
+            await cryptoSol.fillBalances(caller, balances.balances);
 
             for (const balance of balances.balances) {
                 let balanceBeforeClaim = await ethers.provider.getBalance(balance.dmdv4Address);
@@ -382,7 +363,7 @@ describe('ClaimContract', () => {
                 let cryptoSol = new CryptoSol(claimContract);
 
 
-                let expectedTotalBalance = await cryptoSol.fillBalances(claimContract, caller, testbalances);
+                let expectedTotalBalance = await cryptoSol.fillBalances(caller, testbalances);
 
                 const totalBalance = await ethers.provider.getBalance(await claimContract.getAddress());
                 expect(totalBalance).to.equal(expectedTotalBalance, 'Balance of contract should be the total of all added funds.');
@@ -427,7 +408,7 @@ describe('ClaimContract', () => {
 
                 for (let balance of testset.balances) {
 
-                    let key = cryptoJS.getPublicKeyFromSignature(balance.signature, balance.dmdv4Address, testset.isDMDSigned);
+                    let key = cryptoJS.getPublicKeyFromSignature(balance.signature, balance.dmdv4Address, true);
 
                     //cryptoJS.publicKeyToBTCStyleAddress(key.x, key.y, true);
                     //cryptoJS.bitcoinAddressEssentialToFullQualifiedAddress()
@@ -470,20 +451,37 @@ describe('ClaimContract', () => {
             it("claiming DMD with prefix", async () => {
                 await runAddAndClaimTests(getTestBalances_DMD_with_prefix());
             });
+
+            it("claiming DMD regression known high x high y public keys", async () => {
+                await runAddAndClaimTests(getTestBalancesFromTestdata("small"));
+            });
+
+
+            it("claiming DMD regression from known low x public keys", async () => {
+                await runAddAndClaimTests(getTestBalancesFromTestdata("known_x_00"));
+            });
+
+
+            it("claiming DMD regression from known low y public keys", async () => {
+                await runAddAndClaimTests(getTestBalancesFromTestdata("known_y_00"));
+            });
+
+            if (runLargeTests) {
+                it("Claiming DMD large test: balances_1k", async () => {
+                    await runAddAndClaimTests(getTestBalancesFromTestdata("balances_1k"));
+                }).timeout(60_000); // maximum 1 minutes for this test.
+
+                it("Claiming DMD large test: balances_50k", async () => {
+                    await runAddAndClaimTests(getTestBalancesFromTestdata("balances_50k"));
+                }).timeout(60_000 * 60); // maximum 1 hour for this test.
+            }
         });
+
 
         describe("Dilution", function () {
             let claimContract: ClaimContract;
             let sponsor: SignerWithAddress;
             let totalAmountInClaimingPot: bigint = BigInt(0);
-
-            //const ONE_DAY = 86400n;
-            //const ETHER = BigInt(10n ** 18n);
-
-            beforeEach(async function () {
-
-
-            });
 
             it("should dilute balances and pay out correctly", async function () {
 
@@ -494,15 +492,13 @@ describe('ClaimContract', () => {
                 let sol = new CryptoSol(claimContract);
                 // sol.setLogDebug(true);
 
-                totalAmountInClaimingPot = await sol.fillBalances(claimContract, sponsor, testBalances.balances);
+                totalAmountInClaimingPot = await sol.fillBalances(sponsor, testBalances.balances);
 
                 // Try to dilute before first dilution period - should fail
                 await expect(claimContract.dilute1()).to.be.revertedWithCustomError(
                     claimContract,
                     "DiluteTimeNotReached"
                 );
-
-                let now = await claimContract.deploymentTimestamp();
 
                 let claimingBalances = getTestBalances_dillution();
                 const [claimersEarly, claimersMid, claimersLate, claimersNever] = claimingBalances.balances;
