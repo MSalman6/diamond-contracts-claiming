@@ -15,7 +15,6 @@ typechain-types/
 api/contracts/
 
 build/
-dist/
 
 # Coverage
 coverage/
