@@ -6,7 +6,7 @@ import varuint from 'varuint-bitcoin';
 import bitcoinMessage from 'bitcoinjs-message';
 import * as bitcoin from 'bitcoinjs-lib';
 import * as secp256k1 from "secp256k1";
-import { ethers } from 'hardhat';
+import { ethers } from 'ethers';
 
 let base58check = require('base58check'); 
 

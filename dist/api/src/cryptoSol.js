@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CryptoSol = void 0;
-const hardhat_1 = require("hardhat");
 const cryptoHelpers_1 = require("./cryptoHelpers");
 const cryptoJS_1 = require("./cryptoJS");
 const cryptoHelpers_2 = require("./cryptoHelpers");
@@ -10,10 +9,10 @@ let base58check = require('base58check');
  * Crypto functions used in this project implemented in Soldity.
  */
 class CryptoSol {
-    static async fromContractAddress(contractAddress) {
-        const contract = await hardhat_1.ethers.getContractAt("ClaimContract", contractAddress);
-        return new CryptoSol(contract);
-    }
+    // public static async fromContractAddress(contractAddress: string): Promise<CryptoSol> {
+    //   const contract: any = await ethers.getContractAt("ClaimContract", contractAddress);
+    //   return new CryptoSol(contract);
+    // }
     /// Creates an instance if you already have a ClaimContract instance.
     /// use static method fromContractAddress() for creating an instance from a contract address.
     constructor(instance) {
@@ -94,39 +93,6 @@ class CryptoSol {
     async getBalance(dmdV3Address) {
         const ripe = this.cryptoJS.dmdAddressToRipeResult(dmdV3Address);
         return await this.instance.balances((0, cryptoHelpers_1.ensure0x)(ripe));
-    }
-    async getContractBalance() {
-        const address = await this.instance.getAddress();
-        // get the balance of ths address.
-        return await hardhat_1.ethers.provider.getBalance(address);
-    }
-    async fillBalances(sponsor, balances) {
-        let totalBalance = hardhat_1.ethers.toBigInt('0');
-        let accounts = [];
-        let balancesForContract = [];
-        for (const balance of balances) {
-            accounts.push((0, cryptoHelpers_1.ensure0x)(this.cryptoJS.dmdAddressToRipeResult(balance.dmdv3Address)));
-            balancesForContract.push(balance.value);
-            totalBalance = totalBalance + hardhat_1.ethers.toBigInt(balance.value);
-        }
-        // console.log(accounts);
-        // console.log(balancesForContract);
-        // console.log(totalBalance);
-        const fillTx = await (await this.instance.connect(sponsor).fill(accounts, balancesForContract, { value: totalBalance })).wait();
-        this.log("contract address:", await this.instance.getAddress());
-        if (fillTx) {
-            const hash = fillTx.hash;
-            this.log("fillTx hash:", hash);
-            const response = await fillTx.getTransaction();
-            if (response) {
-                //console.log("fillTx data:", response.data);
-                this.log("fillTx hash:", hash);
-                this.log("fillTx data length (bytes):", response.data.length / 2);
-            }
-        }
-        // console.log("result status", txResult?.status);
-        //console.log(await txResult?.getResult());
-        return totalBalance;
     }
 }
 exports.CryptoSol = CryptoSol;

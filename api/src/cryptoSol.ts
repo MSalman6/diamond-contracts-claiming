@@ -1,4 +1,4 @@
-import { ethers } from "hardhat";
+// import { ethers } from "hardhat";
 import { ClaimContract } from '../../typechain-types/index';
 import { ensure0x, ensure0xb32, remove0x, stringToUTF8Hex, toHexString } from './cryptoHelpers';
 import { CryptoJS } from './cryptoJS';
@@ -17,11 +17,11 @@ export class CryptoSol {
 
   private logDebug: boolean = false;
 
-  public static async fromContractAddress(contractAddress: string): Promise<CryptoSol> {
+  // public static async fromContractAddress(contractAddress: string): Promise<CryptoSol> {
 
-    const contract: any = await ethers.getContractAt("ClaimContract", contractAddress);
-    return new CryptoSol(contract);
-  }
+  //   const contract: any = await ethers.getContractAt("ClaimContract", contractAddress);
+  //   return new CryptoSol(contract);
+  // }
 
   /// Creates an instance if you already have a ClaimContract instance.
   /// use static method fromContractAddress() for creating an instance from a contract address.
@@ -131,46 +131,46 @@ export class CryptoSol {
     return await this.instance.balances(ensure0x(ripe));
   }
 
-  public async getContractBalance() {
-    const address = await this.instance.getAddress();
-    // get the balance of ths address.
+  // public async getContractBalance() {
+  //   const address = await this.instance.getAddress();
+  //   // get the balance of ths address.
 
-    return await ethers.provider.getBalance(address);
-  }
+  //   return await ethers.provider.getBalance(address);
+  // }
 
 
-  public async fillBalances(sponsor: SignerWithAddress, balances: BalanceV3[]) {
+  // public async fillBalances(sponsor: SignerWithAddress, balances: BalanceV3[]) {
 
-      let totalBalance = ethers.toBigInt('0');
-      let accounts: string[] = [];
-      let balancesForContract: string[] = [];
+  //     let totalBalance = ethers.toBigInt('0');
+  //     let accounts: string[] = [];
+  //     let balancesForContract: string[] = [];
 
-      for (const balance of balances) {
-          accounts.push(ensure0x(this.cryptoJS.dmdAddressToRipeResult(balance.dmdv3Address)));
-          balancesForContract.push(balance.value);
-          totalBalance = totalBalance + ethers.toBigInt(balance.value);
-      }
+  //     for (const balance of balances) {
+  //         accounts.push(ensure0x(this.cryptoJS.dmdAddressToRipeResult(balance.dmdv3Address)));
+  //         balancesForContract.push(balance.value);
+  //         totalBalance = totalBalance + ethers.toBigInt(balance.value);
+  //     }
 
-      // console.log(accounts);
-      // console.log(balancesForContract);
-      // console.log(totalBalance);
+  //     // console.log(accounts);
+  //     // console.log(balancesForContract);
+  //     // console.log(totalBalance);
 
-      const fillTx = await (await this.instance.connect(sponsor).fill(accounts, balancesForContract, { value: totalBalance })).wait();
+  //     const fillTx = await (await this.instance.connect(sponsor).fill(accounts, balancesForContract, { value: totalBalance })).wait();
       
-      this.log("contract address:", await this.instance.getAddress())
-      if (fillTx ) {
-        const hash = fillTx.hash;
-        this.log("fillTx hash:", hash);
-        const response = await fillTx.getTransaction();
-        if (response) {
-          //console.log("fillTx data:", response.data);
-          this.log("fillTx hash:", hash);
-          this.log("fillTx data length (bytes):", response.data.length / 2);
-        }
-      }
+  //     this.log("contract address:", await this.instance.getAddress())
+  //     if (fillTx ) {
+  //       const hash = fillTx.hash;
+  //       this.log("fillTx hash:", hash);
+  //       const response = await fillTx.getTransaction();
+  //       if (response) {
+  //         //console.log("fillTx data:", response.data);
+  //         this.log("fillTx hash:", hash);
+  //         this.log("fillTx data length (bytes):", response.data.length / 2);
+  //       }
+  //     }
 
-      // console.log("result status", txResult?.status);
-      //console.log(await txResult?.getResult());
-      return totalBalance;
-  }
+  //     // console.log("result status", txResult?.status);
+  //     //console.log(await txResult?.getResult());
+  //     return totalBalance;
+  // }
 }
