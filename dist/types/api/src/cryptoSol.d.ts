@@ -10,6 +10,10 @@ export declare class CryptoSol {
     private logDebug;
     constructor(instance: ClaimContract);
     claim(dmdV3Address: string, dmdV4Address: string, signature: string, postfix: string): Promise<import("ethers").ContractTransactionReceipt | null>;
+    /**
+     * Fetch current gasPrice from RPC - if the call fails or it's below 10 gwei, use a 10 gwei floor.
+     */
+    private getGasPriceWithFloor;
     recoverV(dmdV4Address: string, postfixHex: string, pubKeyX: string, pubKeyY: string, r: Buffer, s: Buffer): Promise<string>;
     setLogDebug(value: boolean): void;
     private log;

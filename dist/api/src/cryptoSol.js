@@ -47,10 +47,33 @@ class CryptoSol {
         this.log('dmdV3AddressFromSignaturesBase58:', base58check.encode((0, cryptoHelpers_1.remove0x)(dmdV3AddressFromSignaturesHex)));
         this.log('dmdV3AddressFromDataBase58:      ', dmdV3Address);
         let v = await this.recoverV(dmdV4Address, postfixHex, pubKeyX, pubKeyY, rs.r, rs.s);
-        let claimOperation = this.instance.claim(dmdV4Address, postfixHex, pubKeyX, pubKeyY, v, rs.r, rs.s, { gasLimit: 200000, gasPrice: "1000000000" });
+        let gasPrice = await this.getGasPriceWithFloor();
+        console.log("Using gas price (wei):", gasPrice.toString());
+        let claimOperation = this.instance.claim(dmdV4Address, postfixHex, pubKeyX, pubKeyY, v, rs.r, rs.s, { gasLimit: 200000, gasPrice: gasPrice });
         let receipt = await (await claimOperation).wait();
         // console.log("receipt: ", receipt?.toJSON())
         return receipt;
+    }
+    /**
+     * Fetch current gasPrice from RPC - if the call fails or it's below 10 gwei, use a 10 gwei floor.
+     */
+    async getGasPriceWithFloor() {
+        const tenGweiWei = 10n * 1000000000n; // 10 gwei in wei
+        const runner = this.instance?.runner ?? null;
+        const provider = runner?.provider ?? null;
+        // fall back to the floor
+        if (!provider) {
+            return tenGweiWei;
+        }
+        // Try direct gasPrice first
+        try {
+            const currentGasPrice = await provider.getGasPrice();
+            if (typeof currentGasPrice === 'bigint') {
+                return currentGasPrice < tenGweiWei ? tenGweiWei : currentGasPrice;
+            }
+        }
+        catch (_) { }
+        return tenGweiWei;
     }
     async recoverV(dmdV4Address, postfixHex, pubKeyX, pubKeyY, r, s) {
         this.log("recoverV:", pubKeyX, pubKeyY);
